@@ -1,0 +1,136 @@
+{
+	"Imageスニペット": {
+		"prefix": "img",
+		"body": [
+			"<Image",
+			"  src=\"/$1\"",
+			"  alt=\"$2\"",
+			"  width={$3}",
+			"  height={$4}",
+			"  className=\"$5\"",
+			"/>"
+		],
+		"description": "Next.js の public フォルダから画像を読み込む Image コンポーネント"
+	},
+	"JSX コンポーネント（単体）": {
+		"prefix": "tag",
+		"body": [
+			"<$1/>"
+		],
+		"description": "汎用の単一JSXタグ"
+	},
+	"Linkボタン": {
+		"prefix": "link_btn",
+		"body": [
+			"<Link href=\"パス$1\" className=\"btn btn-primary\">",
+			"  テキスト$2",
+			"</Link>"
+		],
+		"description": "Next.jsの内部リンクをボタン風に表示するコンポーネント"
+	},
+	"React関数コンポーネント（export default）": {
+		"prefix": "react_func",
+		"body": [
+			"export default function $1() {",
+			"  return (",
+			"    <>",
+			"      $0",
+			"    </>",
+			"  );",
+			"}"
+		],
+		"description": "関数名を変更可能なReactの関数コンポーネントテンプレート"
+	},
+	"daisyUI テキストフィールド": {
+		"prefix": "textfield",
+		"body": [
+			"<input",
+			"  type=\"text\"",
+			"  name=\"$1\"",
+			"  placeholder=\"$2\"",
+			"  className=\"input input-bordered w-full\"",
+			"/>"
+		],
+		"description": "daisyUI の基本的なテキストフィールド"
+	},
+	"useclient": {
+		"prefix": "useclient",
+		"body": [
+			"\"use client\";"
+		],
+		"description": "クライアントコンポーネント宣言（イベントハンドラやuseStateが必要なとき）"
+	},
+	"型付きuseState（string）": {
+		"prefix": "usestate_str",
+		"body": [
+			"const [$1, $2] = useState<string>(\"$3\");"
+		],
+		"description": "型付き useState<string>。第1引数が状態変数、第2引数が更新関数、第3引数は初期値（空文字列など）。"
+	},
+	"型付きuseState（number）": {
+		"prefix": "usestate_num",
+		"body": [
+			"const [$1, $2] = useState<number>($3);"
+		],
+		"description": "型付き useState<number>。初期値は数値（例: 0）"
+	},
+	"型付きuseState（boolean）": {
+		"prefix": "usestate_bool",
+		"body": [
+			"const [$1, $2] = useState<boolean>($3);"
+		],
+		"description": "型付き useState<boolean>。初期値は true または false。"
+	},
+	"型付きuseState（string[] 配列）": {
+		"prefix": "usestate_str_arr",
+		"body": [
+			"const [$1, $2] = useState<string[]>($3);"
+		],
+		"description": "型付き useState<string[]>。初期値は配列（例: []）"
+	},
+	"型付きuseState（オブジェクト）": {
+		"prefix": "usestate_obj",
+		"body": [
+			"type $1Type = {",
+			"  // id: number;",
+			"  // name: string;",
+			"};",
+			"",
+			"const [$2, $3] = useState<$1Type>({});"
+		],
+		"description": "オブジェクトに型をつけた useState。type定義と状態をまとめて記述。"
+	},
+	"型付きuseState（nullable）": {
+		"prefix": "usestate_nullable",
+		"body": [
+			"const [$1, $2] = useState<$3 | null>(null);"
+		],
+		"description": "null を許容する useState。非同期データ取得などで便利。"
+	},
+	"onChangeで入力を監視して状態を更新": {
+		"prefix": "onchange_set",
+		"body": [
+			"// onChangeで入力値eを監視して、useStateの状態を更新する",
+			"onChange={(e) => 更新関数$1(e.target.value)}"
+		],
+		"description": "e.target.valueで現在の入力値を取得"
+	},
+  "async fetch関数（POST + JSON）": {
+    "prefix": "asyncfetch",
+    "body": [
+      "async function $1() {",
+			"  // 実際の処理内容.",
+      "  // fetchでリクエスト送って、そのレスポンスが response に入る.この一連の動作が終わるまで次に進まないように await.",
+      "  const response = await fetch(\"$2\", {",
+      "    method: \"POST\",",
+      "    headers: { \"Content-Type\": \"application/json\" },",
+      "    body: JSON.stringify({ $3 })",
+      "  });",
+      "",
+      "  const data = await response.json();  // レスポンスの中身を取り出す（非同期）",
+      "  console.log(data);",
+      "}"
+    ],
+    "description": "async 関数内で fetch POST してレスポンス受け取る構造"
+  }
+}
