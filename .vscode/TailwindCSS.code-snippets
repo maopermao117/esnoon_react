@@ -1,0 +1,53 @@
+{
+  "大枠のVStack": {
+    "prefix": "frame_Vstack",
+    "body": [
+      "{/* 大枠のVStack */}",
+      "<div className=\"flex flex-col items-center space-y-4 w-screen h-screen\">",
+      "  $0",
+      "</div>"
+    ],
+    "description": "縦並び。justify(主軸)-で上下の揃えを、items(交差軸)-で左右の揃えをします"
+  },
+  "通常のVStack": {
+    "prefix": "vstack",
+    "body": [
+      "<div className=\"flex flex-col items-center w-full\">",
+      "  $0",
+      "</div>"
+    ],
+    "description": "縦並び。justify(主軸)-で上下の揃えを、items(交差軸)-で左右の揃えをします"
+  },
+  "通常のHStack": {
+    "prefix": "hstack",
+    "body": [
+      "<div className=\"flex flex-row items-center justify-center w-full\">",
+      "  $0",
+      "</div>"
+    ],
+    "description": "横並び。justify(主軸)-で左右の揃えを、items(交差軸)-で上下の揃えをします"
+  },
+  "通常のZStack": {
+    "prefix": "zstack",
+    "body": [
+      "absolute -top-10"
+    ],
+    "description": "重ねて表示（ZStack）。親にrelative、重ねる要素にabsolute"
+  },
+  "Textテンプレ": {
+    "prefix": "text",
+    "body": [
+      "<p className=\"text-center text-base font-normal text-gray-800\">",
+      "  $0",
+      "</p>"
+    ],
+    "description": "Tailwind基本テキストスタイル（位置・サイズ・太さ・テキストカラー）"
+  },
+  "Tailwind Spacer": {
+    "prefix": "spacer",
+    "body": [
+      "<div className=\"flex-grow\"></div>"
+    ],
+    "description": "Tailwindの擬似的spacer"
+  }
+}

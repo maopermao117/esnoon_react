@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model active_storage_attachments {
+  id                   BigInt               @id @default(autoincrement())
+  name                 String               @db.VarChar
+  record_type          String               @db.VarChar
+  record_id            BigInt
+  blob_id              BigInt
+  created_at           DateTime             @db.Timestamp(6)
+  active_storage_blobs active_storage_blobs @relation(fields: [blob_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_c3b3935057")
+
+  @@unique([record_type, record_id, name, blob_id], map: "index_active_storage_attachments_uniqueness")
+  @@index([blob_id], map: "index_active_storage_attachments_on_blob_id")
+}
+
+model active_storage_blobs {
+  id                             BigInt                           @id @default(autoincrement())
+  key                            String                           @unique(map: "index_active_storage_blobs_on_key") @db.VarChar
+  filename                       String                           @db.VarChar
+  content_type                   String?                          @db.VarChar
+  metadata                       String?
+  service_name                   String                           @db.VarChar
+  byte_size                      BigInt
+  checksum                       String?                          @db.VarChar
+  created_at                     DateTime                         @db.Timestamp(6)
+  active_storage_attachments     active_storage_attachments[]
+  active_storage_variant_records active_storage_variant_records[]
+}
+
+model active_storage_variant_records {
+  id                   BigInt               @id @default(autoincrement())
+  blob_id              BigInt
+  variation_digest     String               @db.VarChar
+  active_storage_blobs active_storage_blobs @relation(fields: [blob_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_993965df05")
+
+  @@unique([blob_id, variation_digest], map: "index_active_storage_variant_records_uniqueness")
+}
+
+model ar_internal_metadata {
+  key        String   @id @db.VarChar
+  value      String?  @db.VarChar
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+}
+
+model bookmarks {
+  id         BigInt   @id @default(autoincrement())
+  user_id    BigInt
+  post_id    BigInt
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_c1ff6fa4ac")
+  posts      posts    @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_d8b54790ff")
+
+  @@unique([user_id, post_id], map: "index_bookmarks_on_user_id_and_post_id")
+  @@index([post_id], map: "index_bookmarks_on_post_id")
+  @@index([user_id], map: "index_bookmarks_on_user_id")
+}
+
+model default_tag_relations {
+  id             BigInt       @id @default(autoincrement())
+  post_id        BigInt
+  default_tag_id BigInt
+  created_at     DateTime     @db.Timestamp(6)
+  updated_at     DateTime     @db.Timestamp(6)
+  default_tags   default_tags @relation(fields: [default_tag_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_6378bcb8c4")
+  posts          posts        @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_6480885485")
+
+  @@index([default_tag_id], map: "index_default_tag_relations_on_default_tag_id")
+  @@index([post_id], map: "index_default_tag_relations_on_post_id")
+}
+
+model default_tags {
+  id                    BigInt                  @id @default(autoincrement())
+  name                  String?                 @db.VarChar
+  created_at            DateTime                @db.Timestamp(6)
+  updated_at            DateTime                @db.Timestamp(6)
+  default_tag_relations default_tag_relations[]
+}
+
+model likes {
+  id         BigInt   @id @default(autoincrement())
+  user_id    BigInt
+  post_id    BigInt
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_1e09b5dabf")
+  posts      posts    @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_87a8aac469")
+
+  @@unique([user_id, post_id], map: "index_likes_on_user_id_and_post_id")
+  @@index([post_id], map: "index_likes_on_post_id")
+  @@index([user_id], map: "index_likes_on_user_id")
+}
+
+model limited_tag_relations {
+  id             BigInt       @id @default(autoincrement())
+  post_id        BigInt
+  limited_tag_id BigInt
+  created_at     DateTime     @db.Timestamp(6)
+  updated_at     DateTime     @db.Timestamp(6)
+  limited_tags   limited_tags @relation(fields: [limited_tag_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_4abeb2e268")
+  posts          posts        @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_6b7f90ca60")
+
+  @@index([limited_tag_id], map: "index_limited_tag_relations_on_limited_tag_id")
+  @@index([post_id], map: "index_limited_tag_relations_on_post_id")
+}
+
+model limited_tags {
+  id                    BigInt                  @id @default(autoincrement())
+  name                  String?                 @db.VarChar
+  start_at              DateTime?               @db.Timestamp(6)
+  end_at                DateTime?               @db.Timestamp(6)
+  description           String?
+  created_at            DateTime                @db.Timestamp(6)
+  updated_at            DateTime                @db.Timestamp(6)
+  limited_tag_relations limited_tag_relations[]
+}
+
+model posts {
+  id                    BigInt                  @id @default(autoincrement())
+  user_id               BigInt
+  content               String?
+  created_at            DateTime                @db.Timestamp(6)
+  updated_at            DateTime                @db.Timestamp(6)
+  bookmarks             bookmarks[]
+  default_tag_relations default_tag_relations[]
+  likes                 likes[]
+  limited_tag_relations limited_tag_relations[]
+  users                 users                   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_5b5ddfd518")
+
+  @@index([user_id], map: "index_posts_on_user_id")
+}
+
+model profiles {
+  id              BigInt    @id @default(autoincrement())
+  user_id         BigInt
+  phone_number    String?   @db.VarChar
+  birth_date      DateTime? @db.Date
+  user_name       String?   @db.VarChar
+  graduation_year Int?
+  gender          String?   @db.VarChar
+  affiliation     String?   @db.VarChar
+  real_name       String?   @db.VarChar
+  real_name_kana  String?   @db.VarChar
+  user_sei        String?   @db.VarChar
+  user_mei        String?   @db.VarChar
+  user_sei_kana   String?   @db.VarChar
+  user_mei_kana   String?   @db.VarChar
+  completed       Boolean?
+  created_at      DateTime  @db.Timestamp(6)
+  updated_at      DateTime  @db.Timestamp(6)
+  users           users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rails_e424190865")
+
+  @@index([user_id], map: "index_profiles_on_user_id")
+}
+
+model schema_migrations {
+  version String @id @db.VarChar
+}
+
+model users {
+  id              BigInt      @id @default(autoincrement())
+  user_identifier String?     @db.VarChar
+  email           String?     @db.VarChar
+  password        String?     @db.VarChar
+  created_at      DateTime    @db.Timestamp(6)
+  updated_at      DateTime    @db.Timestamp(6)
+  bookmarks       bookmarks[]
+  likes           likes[]
+  posts           posts[]
+  profiles        profiles[]
+}
