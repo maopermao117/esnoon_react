@@ -27,7 +27,13 @@ export async function POST(req: Request) {
       },
     });
 
-    return new Response(JSON.stringify(newUser), { status: 201 }); // new Response()の第一引数がjsonのbodyになって、第二引数がオプション扱いでステータスとか入れてるだけ.
+    // BigIntを文字列に変換（必要なフィールドだけ）
+    const safeUser = {
+      ...newUser,
+      id: newUser.id.toString(),  // ← これが重要
+    };
+
+    return new Response(JSON.stringify(safeUser), { status: 201 }); // new Response()の第一引数がjsonのbodyになって、第二引数がオプション扱いでステータスとか入れてるだけ.
   } catch (error) {
     // catchの部分はエラーハンドリング
     console.error(error);
