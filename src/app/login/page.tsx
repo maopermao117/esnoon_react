@@ -5,14 +5,11 @@ import { Input } from "@/components/ui/input"
 import Link from "next/link";
 import UniqueCheck from "@/components/users/unique_check";
 
-export default function Signup() {
+export default function Home() {
 
-  const [user_identifier, setUserIdentifier] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
+  const [user_identifier_or_email, setUserIdentifier] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [message, setMessage] = useState<string>("");
-  const [checkID, setCheckID] = useState<boolean | null>(null);
-  const [IDmessage, setIDmessage] = useState<string>("");
 
   // フォーム送信
   const handleSubmit = async (e: React.FormEvent) => {
@@ -22,37 +19,22 @@ export default function Signup() {
 
     // 実際の処理内容
     // fetchでリクエスト送ってそのレスポンスがresに入る.この一連の動作が終わるまで次に進まないようにするためにawait.
-    const res = await fetch("/api/signup", {
+    const res = await fetch("/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_identifier, email, password }),
+      body: JSON.stringify({ user_identifier_or_email, password }),
     });
 
     const data = await res.json();  // レスポンスの中身を取り出すのに若干時間いるのでawait入れる.
-    setMessage(data.error || "登録成功！");
+    if(data.user_id){
+      console.log(data.user_id)
+    }
+    setMessage(data.error || "ログイン成功");
   };
 
-  async function checkUserID(value: string) {
-    // 実際の処理内容.
-    // fetchでリクエスト送って、そのレスポンスが response に入る.この一連の動作が終わるまで次に進まないように await.
-    const response = await fetch("/api/check_user_identifier", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_identifier: value })
-    });
 
-    const data = await response.json();  // レスポンスの中身を取り出す（非同期）
 
-    // 一意ならsetCheckIDをtrueへ
-    if (data.success) {
-      setCheckID(true)
-      setIDmessage("使用可能なIDです")
-    } else {
-      setCheckID(false)
-      setIDmessage(data.error || "このIDは使えません")
-    }
-    console.log(data);
-  }
+
 
 
   return (
@@ -88,41 +70,13 @@ export default function Signup() {
             <div className="flex flex-row items-center justify-center w-full">
               <Input
                 type="text"
-                value={user_identifier}
+                value={user_identifier_or_email}
                 placeholder="ユーザーID" // onChangeで入力値eを監視して、useStateの状態を更新する
                 onChange={(e) => {
                   const value = e.target.value
                   setUserIdentifier(value)
-                  checkUserID(value)
                 }} />
-              <UniqueCheck
-                checkID={checkID}
-              />
             </div>
-            <div className="flex flex-row items-center justify-center w-full h-4 mt-4">
-              {checkID === true &&
-                <p className="text-center text-base font-normal text-blue-500">
-                  {IDmessage}
-                </p>
-              }
-              {checkID == false &&
-                <p className="text-center text-base font-normal text-red-500">
-                  {IDmessage}
-                </p>
-              }
-            </div>
-          </div>
-
-          {/* メールアドレス */}
-          <div className="flex flex-col items-start w-full mb-8">
-            <p className="text-center text-base font-normal text-gray-800">
-              メールアドレス
-            </p>
-            <Input
-              type="email"
-              value={email}
-              placeholder="Email" // onChangeで入力値eを監視して、useStateの状態を更新する
-              onChange={(e) => setEmail(e.target.value)} />
           </div>
 
           {/* パスワード */}
@@ -164,7 +118,7 @@ export default function Signup() {
           <div className="flex flex-row items-center justify-center w-full">
             <p className="text-center text-base font-normal text-gray-800">
               アカウントを持っていませんか？
-              <Link href="/login" className="text-blue-600 hover:underline">
+              <Link href="/signup" className="text-blue-600 hover:underline">
                 ログインはこちら
               </Link>
             </p>
