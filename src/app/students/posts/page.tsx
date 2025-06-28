@@ -3,37 +3,55 @@
 import Link from "next/link";
 import Image from "next/image";
 import Drawer from "@/components/users/drawer";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function () {
 
   const [content, setContent] = useState<string>("");
   const [likedPosts, setLikedPosts] = useState<Set<number>>(new Set());
 
-// ボタン押下時
-const handleLikeToggle = async (postId: number) => {
-  const isLiked = likedPosts.has(postId);
+  // 投稿送信リクエスト
+  const postSubmit = async (e: React.FocusEvent) => {
+    // リロードの即停止.
+    e.preventDefault();
+    // 現在のユーザーのID(NextAuthで管理するのでトークン方式かな)
+    const user_id: number = 2;
 
-  // フロント上は即時切り替え（楽観的UI）
-  setLikedPosts(prev => {
-    const next = new Set(prev);
-    isLiked ? next.delete(postId) : next.add(postId);
-    return next;
-  });
-
-  // APIリクエスト（後から整合性とる）
-  try {
-    const res = await fetch(`/api/posts/${postId}/${isLiked ? 'unlike' : 'like'}`, { method: 'POST' });
-    if (!res.ok) throw new Error();
-  } catch (e) {
-    // エラー時はUIを元に戻す
-    setLikedPosts(prev => {
-      const next = new Set(prev);
-      isLiked ? next.add(postId) : next.delete(postId);
-      return next;
+    //　リクエスト叩く
+    const res = await fetch("/api/posts/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content, user_id })
     });
   }
-};
+
+
+
+
+  // ボタン押下時
+  const handleLikeToggle = async (postId: number) => {
+    const isLiked = likedPosts.has(postId);
+
+    // フロント上は即時切り替え（楽観的UI）
+    setLikedPosts(prev => {
+      const next = new Set(prev);
+      isLiked ? next.delete(postId) : next.add(postId);
+      return next;
+    });
+
+    // APIリクエスト（後から整合性とる）
+    try {
+      const res = await fetch(`/api/posts/${postId}/${isLiked ? 'unlike' : 'like'}`, { method: 'POST' });
+      if (!res.ok) throw new Error();
+    } catch (e) {
+      // エラー時はUIを元に戻す
+      setLikedPosts(prev => {
+        const next = new Set(prev);
+        isLiked ? next.add(postId) : next.delete(postId);
+        return next;
+      });
+    }
+  };
 
   return (
     <>
@@ -82,18 +100,18 @@ const handleLikeToggle = async (postId: number) => {
               placeholder="今日はES書いた"
               // onChangeで入力値eを監視して、useStateの状態を更新する
               onChange={(e) => setContent(e.target.value)}
-              className="w-full pr-8 h-20 bg-transparent focus:bg-transparent border-none focus:border-none outline-none focus:outline-none resize-none text-base text-mint-800 placeholder-mint-400"
+              className="w-full pr-16 h-20 bg-transparent focus:bg-transparent border-none focus:border-none outline-none focus:outline-none resize-none text-base text-mint-800 placeholder-mint-400"
             />
 
             {/* 下部アイテム */}
             <div className="flex flex-row items-center justify-between w-full">
               <div className="flex flex-row items-center justify-center">
                 {/* 画像添付 */}
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 hover:stroke-blue-500 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 hover:stroke-blue-500 transition">
                   <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                 </svg>
                 {/* GIF */}
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12.75 8.25v7.5m6-7.5h-3V12m0 0v3.75m0-3.75H18M9.75 9.348c-1.03-1.464-2.698-1.464-3.728 0-1.03 1.465-1.03 3.84 0 5.304 1.03 1.464 2.699 1.464 3.728 0V12h-1.5M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
                 </svg>
               </div>
@@ -128,7 +146,7 @@ const handleLikeToggle = async (postId: number) => {
               </div>
 
               {/* 投稿内容 */}
-              <p className="text-start text-base font-normal text-gray-800 w-full pr-8">
+              <p className="text-start text-base font-normal text-gray-800 w-full pr-16">
                 テストテストテストテストテスト
               </p>
 
