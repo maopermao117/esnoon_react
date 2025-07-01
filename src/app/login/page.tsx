@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input"
 import Link from "next/link";
 import UniqueCheck from "@/components/users/unique_check";
-import { login, signup } from './actions'
+import { login } from './actions'
 
 export default function Home() {
 
@@ -45,6 +45,7 @@ export default function Home() {
             <div className="flex flex-row items-center justify-center w-full">
               <Input
                 type="text"
+                name="email"
                 value={email} // / Supabaseのactionsに送信される実データ
                 placeholder="" // onChangeで入力値eを監視して、useStateの状態を更新する
                 onChange={(e) => {
@@ -61,6 +62,7 @@ export default function Home() {
             </p>
             <Input
               type="password"
+              name="password"
               value={password}  // Supabaseのactionsに送信される実データ
               placeholder=""
               // onChangeで入力値eを監視して、useStateの状態を更新する
