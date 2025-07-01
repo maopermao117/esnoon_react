@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input"
 import Link from "next/link";
 import UniqueCheck from "@/components/users/unique_check";
-import { login, signup } from './actions'
+import { signup } from './actions'
 
 export default function Signup() {
 
@@ -42,6 +42,7 @@ export default function Signup() {
             </p>
             <Input
               type="email"
+              name="email"
               value={email}
               placeholder="abcd@....com" // onChangeで入力値eを監視して、useStateの状態を更新する
               onChange={(e) => setEmail(e.target.value)} />
@@ -54,6 +55,7 @@ export default function Signup() {
             </p>
             <Input
               type="password"
+              name="password"
               value={password}
               placeholder="password"
               // onChangeで入力値eを監視して、useStateの状態を更新する
@@ -78,7 +80,7 @@ export default function Signup() {
 
           {/* 送信ボタン */}
           <div className="flex flex-row items-center justify-center w-full mb-8">
-            <button formAction={signup} type="submit" className="btn btn-primary">新規登録</button>
+            <button formAction={signup} type="submit" className="btn btn-primary">新規登録!</button>
           </div>
 
           {/* アカウントを持ってない場合 */}
