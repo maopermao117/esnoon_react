@@ -1,0 +1,17 @@
+# docker-compose.yml
+
+services:
+  db:
+    image: postgres:15 # ✅ PostgreSQLのバージョンを15に変更
+    container_name: esnoon_react_app
+    ports:
+      - "5344:5432" # デフォルトだと5432:5432
+    environment:
+      POSTGRES_USER: maopermao117
+      POSTGRES_PASSWORD: mao123DS
+      POSTGRES_DB: esnoon_development
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
