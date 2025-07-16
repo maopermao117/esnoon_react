@@ -24,10 +24,19 @@
     ],
     "description": "縦並び。justify(主軸)-で上下の揃えを、items(交差軸)-で左右の揃えをします"
   },
+    "レイヤー": {
+    "prefix": "vstack_bg",
+    "body": [
+      "<div className=\"flex flex-col items-center absolute inset-0 z-0$1\">",
+      "  $0",
+      "</div>"
+    ],
+    "description": "縦並び。justify(主軸)-で上下の揃えを、items(交差軸)-で左右の揃えをします"
+  },
   "通常のHStack": {
     "prefix": "hstack",
     "body": [
-      "<div className=\"flex flex-row items-center justify-center w-full\">",
+      "<div className=\"flex flex-row items-center justify-start w-full\">",
       "  $0",
       "</div>"
     ],
@@ -36,7 +45,7 @@
     "クラス内HStack": {
     "prefix": "hstack_class",
     "body": [
-      "flex flex-row items-center justify-center w-full"
+      "flex flex-row items-center justify-start w-full"
     ],
     "description": "横並び。justify(主軸)-で左右の揃えを、items(交差軸)-で上下の揃えをします"
   },
